@@ -1,5 +1,8 @@
 # From one image to MMD / 从一张图到 MMD
 
+This page describes the available workflow. For the planned cloth, photo-matched
+lighting and room extensions, see the [technical roadmap](technical-roadmap.md).
+
 ## Inputs and outputs
 
 Character input: one original JPEG/PNG photo, ideally with the outfit, hands and

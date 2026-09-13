@@ -126,6 +126,10 @@ repeatable multi-character evaluation, native PMX export validation, and fewer
 manual calibration steps. Contributions with a reproducible before/after are welcome.
 See [CONTRIBUTING](CONTRIBUTING.md).
 
+The [technical roadmap / 可复用技术路线](docs/technical-roadmap.md) specifies the next
+cloth, lighting and scene stages, their technology choices, reusable contracts and
+acceptance gates. These are planned capabilities, not additions to the current demo.
+
 **Code:** MIT. **Showcase media and third-party assets:** excluded from that license.
 No source motion, model, baked animation, audio, or `.blend` file is distributed.
 Motion: [つん](https://www.nicovideo.jp/watch/sm28422307);
@@ -152,6 +156,9 @@ T pose 是流程产物，不需要你额外提供。舞蹈动作需要从
 MMD 导入桥接、逐帧独立渲染、黑帧检查、GIF 制作，以及这次角色的完整修复配方。
 示例达到 104 根骨骼、30 根手指骨骼与 12 秒舞蹈；头发拉伸、裙摆穿插、表情和
 物理模拟仍是下一阶段的改进重点。
+
+下一阶段的技术栈、布料代理、原图场景与灯光、缓存恢复和跨角色验收见
+[可复用技术路线](docs/technical-roadmap.md)。文档明确区分已有能力和待实现模块。
 
 先用 `prepare` 从原图生成 T pose；检查脸、手、鞋和左右服装细节后，再用 `generate`
 从 T pose 生成 3D 模型。两步都默认只预览计划，加 `--execute` 才调用付费任务。
