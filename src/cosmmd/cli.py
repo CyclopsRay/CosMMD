@@ -8,6 +8,12 @@ from pathlib import Path
 def main():
     p = argparse.ArgumentParser(prog='cosmmd')
     sub = p.add_subparsers(dest='command', required=True)
+    t = sub.add_parser('prepare', help='Original photo → Nano Banana Pro T pose through Tripo')
+    t.add_argument('--image', required=True)
+    t.add_argument('--run', required=True)
+    t.add_argument('--execute', action='store_true', help='Submit one image editing task; spends provider credits')
+    t.add_argument('--size', choices=['1K', '2K', '4K'], default='2K')
+    t.add_argument('--prompt-file', help='Optional UTF-8 character-specific preservation prompt')
     g = sub.add_parser('generate', help='Plan or run one image → Tripo model + auto-rig')
     g.add_argument('--image', required=True)
     g.add_argument('--run', required=True)
@@ -39,7 +45,11 @@ def main():
     a.add_argument('directory', nargs='?', default='.')
     args = p.parse_args()
     try:
-        if args.command == 'generate':
+        if args.command == 'prepare':
+            from .tripo import TPOSE_PROMPT, prepare_tpose
+            prompt = Path(args.prompt_file).read_text(encoding='utf-8') if args.prompt_file else TPOSE_PROMPT
+            print(json.dumps(prepare_tpose(args.image, args.run, args.execute, args.size, prompt), indent=2))
+        elif args.command == 'generate':
             from .tripo import generate
             print(json.dumps(generate(args.image, args.run, args.execute, args.model, args.rig_model), indent=2))
         elif args.command == 'render':

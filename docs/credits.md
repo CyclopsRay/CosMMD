@@ -14,7 +14,11 @@ rendered workflow examples. The demonstration is non-monetized. That authorizati
 is not a general license to redistribute the character, the source motion or any
 other creator's work. `docs/media/` is excluded from the code license; its rights
 remain with the respective owners. Ask the relevant rights holders before reuse.
-The media manifest records exact reviewed files and their provenance.
+The media manifest records exact reviewed files and their provenance. The current
+original room photo was supplied and authorized for the input panel by the owner;
+the existing prepared T-pose reference is shown as an intermediate. This does not
+license incidental characters, artwork or brands visible in the room. The original
+T-pose API task trace is not part of the evidence; see [provenance](reproducibility.md).
 
 | Contribution | Credit and original source |
 |---|---|
@@ -23,6 +27,7 @@ The media manifest records exact reviewed files and their provenance.
 | Choreography | 足太ぺんた · https://www.nicovideo.jp/watch/sm27753880 |
 | Original song | TOKOTOKO（西沢さんP） · https://www.nicovideo.jp/watch/sm27529228 |
 | Motion terms | https://privatter.net/p/7867947 |
+| Image preparation workflow | Nano Banana Pro via [Tripo image-to-image API](https://developers.tripo3d.ai/en/docs/generation-image-to-image) |
 | 3D generation | https://www.tripo3d.ai/ |
 | Rendering and rigging | https://www.blender.org/ |
 | Motion importer | https://github.com/MMD-Blender/blender_mmd_tools |

@@ -5,16 +5,16 @@
 ### One image. A character in motion.
 ### 仅凭一张角色图片，让 3D 角色跳起 MMD！
 
-**Single-image cosplay → textured 3D → articulated rig → a 12-second dance.**
+**One cosplay photo → Nano Banana Pro T pose → Tripo 3D → a 12-second MMD dance.**
 
 [![Code: MIT](https://img.shields.io/badge/code-MIT-8e173b)](LICENSE)
 [![Blender](https://img.shields.io/badge/Blender-5.2-ef8b2c)](https://www.blender.org/)
 [![Workflow](https://img.shields.io/badge/workflow-agent--guided-56465d)](#what-you-get)
 [![Checks](https://github.com/CyclopsRay/CosMMD/actions/workflows/ci.yml/badge.svg)](https://github.com/CyclopsRay/CosMMD/actions/workflows/ci.yml)
 
-<img src="docs/media/hero.gif" alt="One full-body cosplay reference beside its 12-second 3D MMD dance" width="1040">
+<img src="docs/media/hero.gif" alt="Original cosplay photo, prepared T-pose reference, and the complete 12-second 3D MMD dance" width="1440">
 
-**One character reference · 104 rig bones · 30 finger bones · 12 seconds in motion**
+**One original photo · a generated T pose · 104 rig bones · 12 seconds in motion**
 
 [English](#what-you-get) · [中文](#中文说明) · [Get the agent skill](https://github.com/CyclopsRay/2DCosplayerToMMD) · [Workflow & lessons](docs/workflow.md)
 
@@ -22,14 +22,16 @@
 
 Your character already has a look. **CosMMD carries that look into motion**: the
 hair, outfit, cuffs, fingers, shoes and small details that make the character yours.
-Tripo builds the 3D starting point. Blender supplies the rig, motion and rendering.
+Nano Banana Pro, accessed through Tripo, prepares a neutral T-pose image. Tripo turns
+that reviewed image into the 3D starting point. Blender supplies the rig, motion and rendering.
 CosMMD packages the glue, the repair recipes, and the checks we wish we had on day one.
 
 **Like the transformation? Star CosMMD and help build the next chapter of single-image character animation.**
 
 ## What you get
 
-- **A Tripo API workflow** for one image → textured GLB → humanoid auto-rig, with task checkpoints and no blind paid retries.
+- **Photo-to-T-pose preparation** with Nano Banana Pro through Tripo API: remove pose/scene clutter while preserving the character, then review before 3D generation.
+- **A Tripo API workflow** for the prepared T pose → textured GLB → humanoid auto-rig, with task checkpoints and no blind paid retries.
 - **Appearance-preserving rig tools**: transfer weights to the original surface, fit finger chains, calibrate the neutral pose, and constrain knee bends.
 - **An MMD import bridge** for a locally supplied, licensed VMD through external MMD Tools.
 - **A robust rendering path**: a fresh Blender process per frame, resumable output, every-frame scans, and GIF generation.
@@ -37,7 +39,8 @@ CosMMD packages the glue, the repair recipes, and the checks we wish we had on d
 - **A companion agent skill** that guides the full process and keeps geometry-specific decisions explicit.
 
 This is an **early, agent-guided toolkit**, not a universal one-click auto-rigger.
-The only character input is one full-body image; you also need a Tripo API key,
+The only character input is one original photo, ideally showing the whole outfit;
+the T pose is an intermediate output, not a second photo you must supply. You also need a Tripo API key,
 Blender, and a motion you are allowed to use. Calibration is still necessary for
 complex garments and generated topology. The input image does not generate the dance choreography.
 
@@ -54,12 +57,20 @@ python -m venv .venv
 # Activate the environment for your shell, then:
 python -m pip install .
 
-# Dry run: no upload, no API credit use.
-cosmmd generate --image private/reference.png --run private/my-character
+# Dry run: inspect the Nano Banana Pro T-pose plan without uploading or spending.
+cosmmd prepare --image private/photo.jpg --run private/my-character
 
-# Set TRIPO_API_KEY privately, then explicitly submit paid tasks:
-cosmmd generate --image private/reference.png --run private/my-character --execute
+# Set TRIPO_API_KEY privately, then generate the T-pose image:
+cosmmd prepare --image private/photo.jpg --run private/my-character --execute
+
+# Review t_pose.png against the original, then create the 3D model and auto-rig:
+cosmmd generate --image private/my-character/t_pose.png \
+  --run private/my-character/model --execute
 ```
+
+Read [photo → T pose → 3D](docs/photo-to-tpose.md) for the API payload, preservation
+prompt, review checklist and resume behavior. An existing clean T-pose image can go
+straight to `generate`.
 
 **Then follow [the workflow](docs/workflow.md)** to inspect the generated mesh,
 calibrate the skeleton, import a licensed motion, and export your clip. For an
@@ -73,17 +84,19 @@ See [API and reproducibility notes](docs/reproducibility.md).
 ## The showcase, up close
 
 <table>
-<tr><th>One 2D character reference</th><th>12-second Blender / MMD result</th></tr>
+<tr><th>Original photo / 原始照片</th><th>T pose / 建模中间图</th><th>3D + MMD / 12 秒舞蹈</th></tr>
 <tr>
-<td><img src="docs/media/input-reference.jpg" width="400" alt="Full-body input reference"></td>
+<td><img src="docs/media/input-reference.jpg" width="270" alt="Original cosplay photo supplied by the project owner"></td>
+<td><img src="docs/media/t-pose.jpg" width="340" alt="Prepared T-pose reference used for the showcase model"></td>
 <td><img src="docs/media/result.gif" width="400" alt="Complete 12-second dance, no audio"></td>
 </tr>
 </table>
 
 The GIF contains **180 freshly rendered frames / 12 seconds / approximately 15 fps**.
-It is an actual Blender render, not an AI-generated video. The showcase uses an
-existing Tripo Studio export and character-specific calibration; the new API adapter
-has contract tests, not a newly purchased end-to-end generation benchmark.
+It is an actual Blender render, not an AI-generated video. The first panel is the
+owner's original photo; the middle panel reuses the prepared T pose used for the
+existing Tripo Studio model. The newly packaged Nano Banana Pro preprocessing and
+3D API stages have offline tests; this update did not buy a fresh end-to-end run.
 A face close-up was available during the original inspection, but is not required
 by the packaged single-image workflow. See [provenance and validation](docs/reproducibility.md).
 
@@ -125,23 +138,27 @@ song: [TOKOTOKO / 西沢さんP](https://www.nicovideo.jp/watch/sm27529228).
 
 **给它一张图，让角色走出画面，跳起 MMD。**
 
-CosMMD 把 Tripo 的单图建模、Blender 骨骼校准、MMD 动作导入和渲染整理成一套
+CosMMD 把原始照片整理成 T pose、Tripo 单图建模、Blender 骨骼校准、MMD 动作导入和渲染整理成一套
 可维护的工具与 agent 工作流。重点是保留角色原有的辨识度：发型、衣服、手型、
 指甲、袖口、鞋面与袜子细节。
 
-你提供的角色素材只需要 **一张全身图片**，另需 Tripo API 密钥。舞蹈动作需要从
+你只需要提供 **一张原始角色照片**，另需 Tripo API 密钥。流程先通过 Tripo API 中的
+**Nano Banana Pro** 生成 T pose 图片，检查角色细节后，再把这张中间图交给 Tripo 生成 3D 模型。
+T pose 是流程产物，不需要你额外提供。舞蹈动作需要从
 原作者处另行取得并符合使用许可；它不是从图片中生成的。当前版本是需要 agent
 或人工校准的早期工具，复杂模型仍不能保证一键完成。
 
-**已经提供：** API 任务断点恢复、原网格权重转移、手指骨骼工具、膝关节约束、
+**已经提供：** Nano Banana Pro T pose 预处理、API 任务断点恢复、原网格权重转移、手指骨骼工具、膝关节约束、
 MMD 导入桥接、逐帧独立渲染、黑帧检查、GIF 制作，以及这次角色的完整修复配方。
 示例达到 104 根骨骼、30 根手指骨骼与 12 秒舞蹈；头发拉伸、裙摆穿插、表情和
 物理模拟仍是下一阶段的改进重点。
 
-上方命令先预览 API 计划，加 `--execute` 才会上传图片并调用付费生成/绑定任务。
-模型生成后请按 [完整流程](docs/workflow.md) 校准，或使用配套
+先用 `prepare` 从原图生成 T pose；检查脸、手、鞋和左右服装细节后，再用 `generate`
+从 T pose 生成 3D 模型。两步都默认只预览计划，加 `--execute` 才调用付费任务。
+完整参数与提示词见 [原图到 T pose 再到 3D](docs/photo-to-tpose.md)。模型生成后请按 [完整流程](docs/workflow.md) 校准，或使用配套
 [2DCosplayerToMMD skill](https://github.com/CyclopsRay/2DCosplayerToMMD)。
-本次展示复用了已有 Tripo Studio 导出，并非新 API 客户端全自动运行的成功率证明。
+展示已换成原始照片，并展示当前模型实际使用的 T pose。已有模型与舞蹈保持对应；
+本次新增 API 预处理做了离线测试，没有重新付费生成整套案例。
 
 仓库只发布代码、文档与审核过的展示图片/GIF。模型、动作包、带动作工程、贴图、
 音频、API 密钥和运行记录都留在本地。除了 `.gitignore`，还会检查 Git 暂存区和历史。

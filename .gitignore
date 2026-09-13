@@ -49,6 +49,7 @@
 *.webp
 *.gif
 !docs/media/input-reference.jpg
+!docs/media/t-pose.jpg
 !docs/media/hero.gif
 !docs/media/result.gif
 !docs/media/rig-preview.jpg

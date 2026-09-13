@@ -5,6 +5,9 @@ what failed, what evidence changed our decision, and what a later run should ver
 
 | Pitfall / 问题 | Evidence and fix / 证据与改法 |
 |---|---|
+| A prepared T pose was mislabeled as the original input / 把 T pose 中间图当成原图 | Keep original photo, prepared T pose and 3D output distinct. The owner supplied the actual posed photo; update the showcase and retain preparation provenance. |
+| Image preparation can change identity / 姿态整理可能改变原型 | Remove scene clutter and held props, then compare face, curls, cuffs, asymmetric socks, shoes and visible trim. Occluded details are inferred; a successful image API task is not likeness validation. |
+| Nano Banana Pro API names differ / 模型名随 API 版本不同 | v3 image-to-image uses `model: banana_pro` and `template: t_pose`; the legacy v2 task uses `model_version: gemini_3_pro_image_preview`. Do not mix schemas or invent a text-only generation path for a photo edit. |
 | Studio is not the API task namespace / 网页模型 ID 不等于 API 任务 ID | A known Studio asset returned 404 from the API. Use an explicit GLB export/re-upload path; do not guess endpoints, enumerate private tasks or spend credits regenerating without approval. |
 | Credits differ / 余额误解 | Studio and API access/billing did not behave interchangeably. Confirm the chosen service and record task IDs; the adapter does not promise a fixed cost. |
 | A successful auto-rig is only a starting point / 自动绑定成功不等于能跳舞 | Source shoulders, wrists and feet were anatomically misplaced. Inspect actual bones inside the original surface. |

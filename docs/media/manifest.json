@@ -2,14 +2,20 @@
   "version": 1,
   "files": {
     "docs/media/input-reference.jpg": {
-      "sha256": "c11354c9d21b1773c8833a4c4df5d6e5fdf8c20e01037524483769c9699eeeca",
-      "bytes": 125498,
-      "rights": "Reduced user-provided full-body reference. Repository owner authorized this showcase publication; excluded from MIT. No EXIF retained."
+      "sha256": "939834da652d12cca78d1164d8f48b52a586561695c8ed4e1f60590c04973526",
+      "bytes": 207338,
+      "rights": "Reduced original posed cosplay photo supplied by the repository owner on 2026-09-14 for this public input panel. No EXIF. Excluded from MIT; incidental artwork/brands retain their owners rights. Earlier reviewed hash was the T-pose reference, now separately labeled as an intermediate.",
+      "previous_sha256": [
+        "c11354c9d21b1773c8833a4c4df5d6e5fdf8c20e01037524483769c9699eeeca"
+      ]
     },
     "docs/media/hero.gif": {
-      "sha256": "22017dd21516b13f4dee35be6e3adc15c9fcd06a99e1393bc590637bc6e9e051",
-      "bytes": 6146018,
-      "rights": "Actual 12-second Blender render beside the authorized input reference. Uses motion by つん, choreography by 足太ぺんた; rendered demonstration only, no source/baked motion data. Non-monetized; excluded from MIT. See docs/credits.md."
+      "sha256": "a0f5946b26f29b79a26e5451cc6eaf3426f5b1f0fb3821a7c3aa8ceb0ba7d7ce",
+      "bytes": 6780076,
+      "rights": "Original owner-supplied photo, existing prepared T-pose intermediate, and actual 12-second Blender render. Nano Banana Pro via Tripo is the newly packaged preparation workflow, tested offline; the existing intermediate/model are reused. Motion by つん; choreography by 足太ぺんた. Non-monetized rendered demo only; excluded from MIT. See docs/credits.md and docs/reproducibility.md. Earlier hash is the reviewed two-panel demo.",
+      "previous_sha256": [
+        "22017dd21516b13f4dee35be6e3adc15c9fcd06a99e1393bc590637bc6e9e051"
+      ]
     },
     "docs/media/result.gif": {
       "sha256": "f08e9b50d25f27d31477da77b504fdb606e2c4e2e7476c94901c926b99bcc54f",
@@ -17,14 +23,22 @@
       "rights": "Actual 12-second Blender render, silent. Source motion and model not included. Motion/other credits and permission context in docs/credits.md; excluded from MIT."
     },
     "docs/media/cover.jpg": {
-      "sha256": "186a9fab7a8f637438bca2adac9dcab53e201a8a6124d4aa6d643940f4ae6b5e",
-      "bytes": 78631,
-      "rights": "Still from the same authorized before/after showcase, excluded from MIT."
+      "sha256": "a61d6f516c26ef08d3ca1a4f7d470e41eb84e8ae6062d592d621627de0851fae",
+      "bytes": 147713,
+      "rights": "Still of the reviewed original-photo / T-pose / dance showcase; earlier hash is the reviewed two-panel composition. Same rights and provenance as hero.gif; excluded from MIT.",
+      "previous_sha256": [
+        "186a9fab7a8f637438bca2adac9dcab53e201a8a6124d4aa6d643940f4ae6b5e"
+      ]
     },
     "docs/media/render-debug.jpg": {
       "sha256": "812d4a8bba1903c586add5c9483889fafab41e1f72b14b7721c6e3bd8bb4d695",
       "bytes": 127868,
       "rights": "Two original/fresh-render comparisons documenting renderer artifacts. Same credited motion and character; excluded from MIT."
+    },
+    "docs/media/t-pose.jpg": {
+      "sha256": "c11354c9d21b1773c8833a4c4df5d6e5fdf8c20e01037524483769c9699eeeca",
+      "bytes": 125498,
+      "rights": "Existing prepared T-pose image actually used for the showcase Studio model, supplied and authorized for publication by the owner. Previously displayed as the first input; now correctly labeled as the intermediate. Its original image-task trace is not archived; no new image generation is claimed. Excluded from MIT; no EXIF."
     }
   }
 }

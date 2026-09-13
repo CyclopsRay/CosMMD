@@ -50,46 +50,73 @@ def encode(frames, output, fps=15):
                 'bytes': Path(output).stat().st_size}
 
 
-def showcase(reference, directory, output, fps=15, font=None):
+def showcase(reference, directory, output, fps=15, font=None, tpose=None):
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
     files = sorted(Path(directory).glob('frame_*.png'))
-    ref = ImageOps.exif_transpose(Image.open(reference)).convert('RGB')
-    ref.thumbnail((1200,1200))
-    ref.save(output / 'input-reference.jpg', quality=90)
+    if not files:
+        raise ValueError('No rendered frames')
+
+    def load_reference(path, name):
+        with Image.open(path) as image:
+            result = ImageOps.exif_transpose(image).convert('RGB')
+        result.thumbnail((1200, 1200))
+        result.info.clear()
+        result.save(output / name, quality=90)
+        return result
+
+    ref = load_reference(reference, 'input-reference.jpg')
+    pose = load_reference(tpose, 't-pose.jpg') if tpose else None
+
     def face(size):
         return ImageFont.truetype(font, size) if font else ImageFont.load_default(size=size)
-    base = Image.new('RGB', (1040, 664), '#faf7f2')
+
+    def place(image, box):
+        x, y, w, h = box
+        tile = ImageOps.contain(image, (w, h), Image.Resampling.LANCZOS)
+        base.paste(tile, (x + (w - tile.width) // 2, y + (h - tile.height) // 2))
+
+    width, height = (1440, 792) if pose is not None else (1040, 734)
+    base = Image.new('RGB', (width, height), '#faf7f2')
     draw = ImageDraw.Draw(base)
-    draw.text((35,22), 'CosMMD', font=face(44), fill='#8e173b')
-    draw.text((36,78), 'One image. A character in motion.', font=face(23), fill='#30262c')
-    draw.line((35,123,1005,123), fill='#d8c7c8', width=1)
-    draw.text((36,143), '01   /   YOUR IMAGE', font=face(17), fill='#8e173b')
-    draw.text((488,143), '02   /   A 12-SECOND MMD DANCE', font=face(17), fill='#8e173b')
-    tile = ImageOps.contain(ref, (390,390))
-    base.paste(tile, (36+(390-tile.width)//2, 225+(390-tile.height)//2))
-    draw.line((439,392,470,392), fill='#8e173b', width=3)
-    draw.polygon([(470,392),(460,386),(460,398)], fill='#8e173b')
-    draw.text((488,622), 'TRIPO  +  BLENDER  /  REAL 3D RENDER', font=face(16), fill='#514049')
+    draw.text((35, 22), 'CosMMD', font=face(44), fill='#8e173b')
+    draw.text((36, 78), 'One photo. T pose. 3D. In motion.' if pose is not None
+              else 'One image. A character in motion.', font=face(23), fill='#30262c')
+    draw.line((35, 123, width-35, 123), fill='#d8c7c8', width=1)
+    draw.text((36, 143), '01 / ORIGINAL PHOTO', font=face(17), fill='#8e173b')
+    if pose is not None:
+        place(ref, (36, 236, 280, 420))
+        draw.text((358, 143), '02 / T-POSE REFERENCE', font=face(17), fill='#8e173b')
+        draw.text((358, 174), 'Nano Banana Pro / Tripo API workflow', font=face(15), fill='#514049')
+        place(pose, (358, 232, 432, 432))
+        draw.text((36, 684), 'Your single character input', font=face(15), fill='#514049')
+        draw.text((358, 684), 'Review likeness, costume and anatomy', font=face(15), fill='#514049')
+        rx, ry, rw = 840, 178, 552
+        arrows = [(323, 348), (801, 830)]
+    else:
+        place(ref, (36, 210, 390, 470))
+        rx, ry, rw = 488, 184, 510
+        arrows = [(439, 478)]
+    draw.text((rx, 143), ('03' if pose is not None else '02') + ' / 12-SECOND MMD DANCE',
+              font=face(17), fill='#8e173b')
+    for start, end in arrows:
+        y = 446 if pose is not None else 430
+        draw.line((start, y, end, y), fill='#8e173b', width=3)
+        draw.polygon([(end, y), (end-8, y-5), (end-8, y+5)], fill='#8e173b')
+    draw.text((rx, ry+rw+14), 'TRIPO 3D + BLENDER + MMD / REAL RENDER',
+              font=face(15), fill='#514049')
     frames, standalone = [], []
     for path in files:
-        im = Image.open(path).convert('RGB')
-        panel = im.resize((510, 510), Image.Resampling.LANCZOS)
+        with Image.open(path) as image:
+            im = image.convert('RGB')
         result = base.copy()
-        result.paste(panel, (488, 184))
-        # Bottom banner is outside the character viewport; the entire source frame is visible.
-        if result.height < 716:
-            padded = Image.new('RGB', (1040, 734), '#faf7f2')
-            padded.paste(result, (0,0))
-            padded.paste(panel, (488,184))
-            ImageDraw.Draw(padded).text((488,707), 'TRIPO + BLENDER / REAL 3D RENDER', font=face(15), fill='#514049')
-            result = padded
+        result.paste(im.resize((rw, rw), Image.Resampling.LANCZOS), (rx, ry))
         frames.append(result)
-        standalone.append(im.resize((512,512), Image.Resampling.LANCZOS))
+        standalone.append(im.resize((512, 512), Image.Resampling.LANCZOS))
     report = {'hero': encode(frames, output/'hero.gif', fps),
               'result': encode(standalone, output/'result.gif', fps)}
     frames[min(len(frames)-1, 75)].save(output/'cover.jpg', quality=92)
-    (output/'gif-validation.json').write_text(json.dumps(report,indent=2))
+    (output/'gif-validation.json').write_text(json.dumps(report, indent=2))
     return report
 
 
@@ -97,8 +124,9 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser()
     p.add_argument('--reference', required=True)
     p.add_argument('--frames', required=True)
+    p.add_argument('--tpose', help='Prepared T-pose image; adds the intermediate panel')
     p.add_argument('--output', required=True)
     p.add_argument('--fps', type=int, default=15)
     p.add_argument('--font')
     a = p.parse_args()
-    print(json.dumps(showcase(a.reference, a.frames, a.output, a.fps, a.font), indent=2))
+    print(json.dumps(showcase(a.reference, a.frames, a.output, a.fps, a.font, a.tpose), indent=2))

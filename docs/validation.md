@@ -3,6 +3,9 @@
 The release was checked locally with Python 3.12 and Blender 5.2.1. No new paid
 Tripo task was submitted during packaging.
 
+- Nano Banana Pro preparation tests check the selected API model/template, one-task
+  resume after a failed download, input-change rejection, and decoded-image validation
+  with unauthenticated asset downloads. No new paid image task was submitted.
 - Unit tests cover ambiguous paid requests, resumed task reuse, a black character
   on a valid background, missing/corrupt frames, staged-versus-working-tree secrets,
   forbidden binary signatures and exact media hashes.
@@ -12,6 +15,8 @@ Tripo task was submitted during packaging.
   `--python-exit-code 1` so a Python traceback cannot be mistaken for success.
 - All 180 public demo source frames were decoded/scanned and all three contact sheets
   reviewed. The previous silhouette interval is visible and correctly shaded.
+- The new three-panel hero uses the owner's original photo, the existing prepared
+  T pose, and the same verified dance frames. No dance poses were regenerated.
 - Both compressed GIFs were reopened: each has 180 frames and exactly 12,000 ms duration.
 - Staged content and reachable Git history are audited before publication. CI repeats
   the checks on source changes; it is not a replacement for the pre-push review.

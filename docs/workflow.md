@@ -2,17 +2,19 @@
 
 ## Inputs and outputs
 
-Character input: one full-body JPEG/PNG, preferably a clear T/A pose with visible
-hands and shoes. Credential: `TRIPO_API_KEY` in the environment. Do not put it in a
+Character input: one original JPEG/PNG photo, ideally with the outfit, hands and
+shoes visible. It does not need to be a T/A pose. Generate a T pose as an intermediate
+image through Nano Banana Pro on Tripo, then review it against the original. Credential: `TRIPO_API_KEY` in the environment. Do not put it in a
 prompt saved to the repository. Blender and Python are tools, not extra image inputs.
 A licensed motion is a separate reusable animation asset. No extra face image is required.
 
-Outputs stay local: original GLB, auto-rig GLB, calibrated blank rig, animated blend,
+Outputs stay local: original photo, generated T-pose PNG, original GLB, auto-rig GLB, calibrated blank rig, animated blend,
 PNG masters, video/GIF and validation reports. Keep a pristine source copy.
 The public repository contains tools and a rendered demonstration, not these assets.
 
 | Stage | Action | Exit condition |
 |---|---|---|
+| 0. Prepare T pose | Original photo → Nano Banana Pro through Tripo API | Downloaded T-pose image; face, hands, costume sides and shoes reviewed |
 | 1. Generate/reuse | Tripo image task + rig-check + rig, or locally exported Studio assets | Saved task IDs, source and rigged GLB downloaded |
 | 2. Inspect | Materials, UVs, connected components, side identity, real fingers | Front/side/oblique views and topology agree |
 | 3. Preserve | Transfer proxy weights onto the original high-resolution surface | Original outer coordinates/UVs unchanged |
@@ -22,14 +24,30 @@ The public repository contains tools and a rendered demonstration, not these ass
 | 7. Render | Fresh process per frame; keep source PNGs | Correct count/dimensions; every-frame QA and visual review |
 | 8. Share | Encode, decode-check, credit, audit staged files and history | Only reviewed media/code enters Git |
 
-## 1. API generation
+## 0. Original photo → T pose
 
 ```sh
-cosmmd generate --image private/reference.png --run private/character
-cosmmd generate --image private/reference.png --run private/character --execute
+cosmmd prepare --image private/photo.jpg --run private/character
+cosmmd prepare --image private/photo.jpg --run private/character --execute
 ```
 
-The first command is a plan. The second submits tasks and can use credits. Read
+This calls Tripo v3 image-to-image with `model: banana_pro`, `template: t_pose`,
+`size: 2K` and a character-preservation prompt. It returns `private/character/t_pose.png`.
+See [the preprocessing guide](photo-to-tpose.md) for prompt customization, metadata,
+review criteria and the distinction between v2 and v3 model names.
+A successful API task means an image exists; visually inspect it before proceeding.
+Do not require another image from the user merely because the intermediate T pose
+has to be generated. If the supplied image is already suitable, skip `prepare`.
+
+## 1. T pose → 3D API generation
+
+```sh
+cosmmd generate --image private/character/t_pose.png --run private/character/model
+cosmmd generate --image private/character/t_pose.png --run private/character/model --execute
+```
+
+The first command is a plan. The second submits 3D tasks using the reviewed T-pose
+image, not the posed room photo. Source/rigged GLBs are saved under `model/`. Read
 current provider pricing before executing. Generation and rigging are separate
 submissions. No automatic purchase, top-up, regeneration or fall-back paid model is performed.
 Rerunning the same command reuses saved task IDs. If a POST timed out before returning
@@ -47,7 +65,7 @@ The adapter uses v3 consistently; the original exploration used v2 and Studio ex
 ## 2. Inspect before repairing
 
 ```sh
-cosmmd inspect --blender /path/to/blender --source private/character/rigged.glb   --output private/character/inspection.json --save private/character/imported.blend
+cosmmd inspect --blender /path/to/blender --source private/character/model/rigged.glb   --output private/character/inspection.json --save private/character/imported.blend
 ```
 
 Look at the actual source mesh, not just the auto-rig. Vertex duplication at UV seams
@@ -126,7 +144,7 @@ physics. Say so. Review large lifts, crouches and turns visually.
 ```sh
 cosmmd render --blender /path/to/blender --scene private/character/animated.blend   --output private/character/frames --start 301 --count 180 --step 2   --size 720 --samples 64 --device CPU
 cosmmd qa private/character/frames --expected 180 --step 2   --report private/character/qa.json --contact-sheets private/character/contacts
-python -m cosmmd.gif --reference private/reference.png   --frames private/character/frames --output private/character/showcase --fps 15
+python -m cosmmd.gif --reference private/photo.jpg --tpose private/character/t_pose.png   --frames private/character/frames --output private/character/showcase --fps 15
 ```
 
 For Apple Silicon use `--device METAL` after a small render check. The fresh-process
@@ -142,8 +160,8 @@ applying AgX twice. Keep the original motion's 30 fps; choose output sampling se
 
 ## 中文要点
 
-角色输入只有一张全身图；Tripo 密钥负责 API 调用，动作是另外取得许可的资源。
-顺序是：生成或复用模型 → 检查网格 → 保留原表面 → 校准关节与手指 → 导入动作 →
+角色输入只有一张原始照片；Tripo 密钥同时用于 Nano Banana Pro 图片预处理和 3D 生成，动作是另外取得许可的资源。
+顺序是：原图 → Nano Banana Pro 生成 T pose → 对照原图检查 → T pose 生成或复用模型 → 检查网格 → 保留原表面 → 校准关节与手指 → 导入动作 →
 检查脚底/镜头/穿插 → 逐帧渲染与核验 → 审核后公开展示。
 
 不要凭单张侧视图判定手指粘连，不要因为自动绑定差就重建原本完整的手和鞋。

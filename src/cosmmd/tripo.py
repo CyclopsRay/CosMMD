@@ -14,7 +14,21 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import quote, urlsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener, urlopen
 
+from PIL import Image, ImageOps
+
 BASE = 'https://openapi.tripo3d.ai/v3'
+TPOSE_MODEL = 'banana_pro'
+TPOSE_PROMPT = (
+    'Show the same character alone, full body, front view, in a symmetrical T pose. '
+    'Keep the face, hairstyle, hair accessories, body proportions, outfit layers, '
+    'colors, trim, cuffs, socks and shoes faithful to the reference. Preserve '
+    'asymmetric costume details on the correct anatomical side. Extend both arms '
+    'horizontally with straight elbows, open hands and separated fingers. Stand '
+    'upright with both legs straight and slightly apart, both feet flat. Show the '
+    'entire head, fingertips and shoes with margin. Remove handheld props and scene '
+    'clutter; use a plain light neutral background and even studio lighting. '
+    'Do not redesign the costume or add accessories. No captions or extra views.'
+)
 
 
 class TripoError(RuntimeError):
@@ -135,6 +149,89 @@ def download_model(result, destination):
             temporary.unlink()
             raise TripoError('Downloaded data is not a GLB model.')
     temporary.replace(destination)
+
+
+def download_image(result, destination):
+    """Download and decode the generated image, without API credentials or EXIF."""
+    url = result.get('output', {}).get('generated_image_url')
+    if not url or urlsplit(url).scheme != 'https':
+        raise TripoError('No HTTPS generated_image_url in task output.')
+    destination = Path(destination)
+    temporary = destination.with_suffix('.download')
+    encoded = destination.with_suffix('.partial.png')
+    try:
+        with urlopen(url, timeout=180) as response, temporary.open('wb') as stream:
+            total = 0
+            while chunk := response.read(1024 * 1024):
+                total += len(chunk)
+                if total > 20 * 1024 * 1024:
+                    raise TripoError('Generated image exceeds the 20 MB upload limit.')
+                stream.write(chunk)
+        with Image.open(temporary) as im:
+            if im.format not in {'PNG', 'JPEG'} or im.width * im.height > 36_000_000:
+                raise TripoError('Expected a JPEG/PNG image of at most 36 megapixels.')
+            im.load()
+            clean = ImageOps.exif_transpose(im).convert('RGB')
+            clean.info.clear()
+            clean.save(encoded, format='PNG')
+        if encoded.stat().st_size > 20 * 1024 * 1024:
+            raise TripoError('Decoded PNG exceeds the next API upload limit; resize locally.')
+        encoded.replace(destination)
+    except (OSError, ValueError):
+        raise TripoError('Generated image could not be downloaded/decoded. Resume the saved task.') from None
+    finally:
+        temporary.unlink(missing_ok=True)
+        encoded.unlink(missing_ok=True)
+
+
+def prepare_tpose(image, run, execute=False, size='2K', prompt=TPOSE_PROMPT):
+    """Original photo → Nano Banana Pro T pose. Review before buying 3D generation."""
+    if size not in {'1K', '2K', '4K'}:
+        raise ValueError('T-pose size must be 1K, 2K or 4K.')
+    if not prompt.strip():
+        raise ValueError('T-pose prompt must not be empty.')
+    plan = {'image': str(image), 'model': TPOSE_MODEL, 'template': 't_pose',
+            'size': size, 'aspect_ratio': '1:1', 'prompt': prompt,
+            'stages': ['upload-original', 'image-to-image', 'download-t-pose', 'visual-review'],
+            'paid_task_submissions_at_most': 1,
+            'next': 'Review t_pose.png, then use it as the image input to generate.',
+            'note': 'No 3D task is submitted by prepare. Hidden details may be inferred.'}
+    if not execute:
+        return plan
+    run = Path(run)
+    run.mkdir(parents=True, exist_ok=True)
+    lock = run / '.tpose.lock'
+    try:
+        fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+    except FileExistsError:
+        raise TripoError('T-pose run is locked. Verify the process before removing a stale lock.') from None
+    os.close(fd)
+    try:
+        client = TripoClient()
+        signature = hashlib.sha256(Path(image).read_bytes()).hexdigest()
+        info_path = run / 'original_input.json'
+        if info_path.exists():
+            info = json.loads(info_path.read_text())
+            if info['sha256'] != signature:
+                raise TripoError('Original photo changed; choose another run directory.')
+        else:
+            info = {'sha256': signature, 'file_token': client.upload_image(image)}
+            atomic_json(info_path, info)
+        payload = {'input': info['file_token'], 'model': TPOSE_MODEL, 'template': 't_pose',
+                   'prompt': prompt, 'size': size, 'aspect_ratio': '1:1', 'output_format': 'png'}
+        journal = run / 'tpose_tasks.json'
+        result = submit_once(client, journal, 'tpose', '/generation/image-to-image', payload)
+        destination = run / 't_pose.png'
+        download_image(result, destination)
+        atomic_json(run / 'tpose_provenance.json', {
+            'original_sha256': signature, 'tpose_sha256': hashlib.sha256(destination.read_bytes()).hexdigest(),
+            'task_id': json.loads(journal.read_text())['tpose'].get('task_id'),
+            'model': TPOSE_MODEL, 'template': 't_pose', 'prompt': prompt, 'size': size,
+            'visual_review_required': True})
+        return {'status': 't_pose_ready_for_review', 't_pose': str(destination),
+                'next': 'Compare face, hands, shoes and costume sides with the original, then generate the 3D model.'}
+    finally:
+        lock.unlink(missing_ok=True)
 
 
 def generate(image, run, execute=False, model='v3.1-20260211', rig_model='v1.0-20240301'):
