@@ -27,3 +27,6 @@ just to silence the history audit.
 欢迎提交可复现的改进，尤其是骨骼校准、头发/裙摆绑定、原型保留与逐帧检查。
 请提供软件版本和对比图。原始模型、动作、音频及包含动作的工程仅保存在本地；
 GitHub 中引用原作者链接。提交前运行测试和 `cosmmd audit .`。
+
+After replacing an embedded image, update its README URL version query and check the
+live page. GitHub/raw image caches can temporarily display the previous composition.
