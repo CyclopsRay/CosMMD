@@ -65,7 +65,7 @@ def showcase(reference, directory, output, fps=15, font=None, tpose=None):
         result.save(output / name, quality=90)
         return result
 
-    ref = load_reference(reference, 'input-reference.jpg')
+    ref = load_reference(reference, 'original-photo.jpg')
     pose = load_reference(tpose, 't-pose.jpg') if tpose else None
 
     def face(size):
@@ -113,7 +113,7 @@ def showcase(reference, directory, output, fps=15, font=None, tpose=None):
         result.paste(im.resize((rw, rw), Image.Resampling.LANCZOS), (rx, ry))
         frames.append(result)
         standalone.append(im.resize((512, 512), Image.Resampling.LANCZOS))
-    report = {'hero': encode(frames, output/'hero.gif', fps),
+    report = {'hero': encode(frames, output/'photo-to-mmd.gif', fps),
               'result': encode(standalone, output/'result.gif', fps)}
     frames[min(len(frames)-1, 75)].save(output/'cover.jpg', quality=92)
     (output/'gif-validation.json').write_text(json.dumps(report, indent=2))

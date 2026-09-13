@@ -28,5 +28,7 @@ just to silence the history audit.
 请提供软件版本和对比图。原始模型、动作、音频及包含动作的工程仅保存在本地；
 GitHub 中引用原作者链接。提交前运行测试和 `cosmmd audit .`。
 
-After replacing an embedded image, update its README URL version query and check the
-live page. GitHub/raw image caches can temporarily display the previous composition.
+After replacing an embedded image, check the live page. GitHub/raw redirects can
+serve old media even with a new query string. Use a new descriptive filename for a
+changed composition and update README links. Retain retired paths and reviewed
+hashes in the manifest with `historical_only: true` for Git history auditing.

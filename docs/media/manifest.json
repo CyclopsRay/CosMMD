@@ -7,7 +7,8 @@
       "rights": "Reduced original posed cosplay photo supplied by the repository owner on 2026-09-14 for this public input panel. No EXIF. Excluded from MIT; incidental artwork/brands retain their owners rights. Earlier reviewed hash was the T-pose reference, now separately labeled as an intermediate.",
       "previous_sha256": [
         "c11354c9d21b1773c8833a4c4df5d6e5fdf8c20e01037524483769c9699eeeca"
-      ]
+      ],
+      "historical_only": true
     },
     "docs/media/hero.gif": {
       "sha256": "a0f5946b26f29b79a26e5451cc6eaf3426f5b1f0fb3821a7c3aa8ceb0ba7d7ce",
@@ -15,7 +16,8 @@
       "rights": "Original owner-supplied photo, existing prepared T-pose intermediate, and actual 12-second Blender render. Nano Banana Pro via Tripo is the newly packaged preparation workflow, tested offline; the existing intermediate/model are reused. Motion by つん; choreography by 足太ぺんた. Non-monetized rendered demo only; excluded from MIT. See docs/credits.md and docs/reproducibility.md. Earlier hash is the reviewed two-panel demo.",
       "previous_sha256": [
         "22017dd21516b13f4dee35be6e3adc15c9fcd06a99e1393bc590637bc6e9e051"
-      ]
+      ],
+      "historical_only": true
     },
     "docs/media/result.gif": {
       "sha256": "f08e9b50d25f27d31477da77b504fdb606e2c4e2e7476c94901c926b99bcc54f",
@@ -39,6 +41,16 @@
       "sha256": "c11354c9d21b1773c8833a4c4df5d6e5fdf8c20e01037524483769c9699eeeca",
       "bytes": 125498,
       "rights": "Existing prepared T-pose image actually used for the showcase Studio model, supplied and authorized for publication by the owner. Previously displayed as the first input; now correctly labeled as the intermediate. Its original image-task trace is not archived; no new image generation is claimed. Excluded from MIT; no EXIF."
+    },
+    "docs/media/photo-to-mmd.gif": {
+      "sha256": "a0f5946b26f29b79a26e5451cc6eaf3426f5b1f0fb3821a7c3aa8ceb0ba7d7ce",
+      "bytes": 6780076,
+      "rights": "Original owner-supplied photo, existing prepared T-pose intermediate, and actual 12-second Blender render. Nano Banana Pro via Tripo is the newly packaged preparation workflow, tested offline; the existing intermediate/model are reused. Motion by つん; choreography by 足太ぺんた. Non-monetized rendered demo only; excluded from MIT. See docs/credits.md and docs/reproducibility.md. Earlier hash is the reviewed two-panel demo."
+    },
+    "docs/media/original-photo.jpg": {
+      "sha256": "939834da652d12cca78d1164d8f48b52a586561695c8ed4e1f60590c04973526",
+      "bytes": 207338,
+      "rights": "Reduced original posed cosplay photo supplied by the repository owner on 2026-09-14 for this public input panel. No EXIF. Excluded from MIT; incidental artwork/brands retain their owners rights. Earlier reviewed hash was the T-pose reference, now separately labeled as an intermediate."
     }
   }
 }

@@ -12,7 +12,7 @@
 [![Workflow](https://img.shields.io/badge/workflow-agent--guided-56465d)](#what-you-get)
 [![Checks](https://github.com/CyclopsRay/CosMMD/actions/workflows/ci.yml/badge.svg)](https://github.com/CyclopsRay/CosMMD/actions/workflows/ci.yml)
 
-<img src="docs/media/hero.gif?v=photo-tpose-2" alt="Original cosplay photo, prepared T-pose reference, and the complete 12-second 3D MMD dance" width="1440">
+<img src="docs/media/photo-to-mmd.gif" alt="Original cosplay photo, prepared T-pose reference, and the complete 12-second 3D MMD dance" width="1440">
 
 **One original photo · a generated T pose · 104 rig bones · 12 seconds in motion**
 
@@ -86,7 +86,7 @@ See [API and reproducibility notes](docs/reproducibility.md).
 <table>
 <tr><th>Original photo / 原始照片</th><th>T pose / 建模中间图</th><th>3D + MMD / 12 秒舞蹈</th></tr>
 <tr>
-<td><img src="docs/media/input-reference.jpg?v=original-photo-2" width="270" alt="Original cosplay photo supplied by the project owner"></td>
+<td><img src="docs/media/original-photo.jpg" width="270" alt="Original cosplay photo supplied by the project owner"></td>
 <td><img src="docs/media/t-pose.jpg" width="340" alt="Prepared T-pose reference used for the showcase model"></td>
 <td><img src="docs/media/result.gif" width="400" alt="Complete 12-second dance, no audio"></td>
 </tr>

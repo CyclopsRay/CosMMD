@@ -48,9 +48,9 @@
 *.jpeg
 *.webp
 *.gif
-!docs/media/input-reference.jpg
+!docs/media/original-photo.jpg
 !docs/media/t-pose.jpg
-!docs/media/hero.gif
+!docs/media/photo-to-mmd.gif
 !docs/media/result.gif
 !docs/media/rig-preview.jpg
 !docs/media/render-debug.jpg
