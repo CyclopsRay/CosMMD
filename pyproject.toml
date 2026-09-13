@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cosmmd"
+version = "0.1.0"
+description = "One image. A character in motion. Tripo + Blender tools for MMD workflows."
+requires-python = ">=3.10"
+dependencies = ["Pillow>=10,<13", "numpy>=1.24,<3"]
+license = {text = "MIT"}
+readme = "README.md"
+
+[project.scripts]
+cosmmd = "cosmmd.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

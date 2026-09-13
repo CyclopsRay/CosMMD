@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "files": {
+    "docs/media/input-reference.jpg": {
+      "sha256": "c11354c9d21b1773c8833a4c4df5d6e5fdf8c20e01037524483769c9699eeeca",
+      "bytes": 125498,
+      "rights": "Reduced user-provided full-body reference. Repository owner authorized this showcase publication; excluded from MIT. No EXIF retained."
+    },
+    "docs/media/hero.gif": {
+      "sha256": "22017dd21516b13f4dee35be6e3adc15c9fcd06a99e1393bc590637bc6e9e051",
+      "bytes": 6146018,
+      "rights": "Actual 12-second Blender render beside the authorized input reference. Uses motion by つん, choreography by 足太ぺんた; rendered demonstration only, no source/baked motion data. Non-monetized; excluded from MIT. See docs/credits.md."
+    },
+    "docs/media/result.gif": {
+      "sha256": "f08e9b50d25f27d31477da77b504fdb606e2c4e2e7476c94901c926b99bcc54f",
+      "bytes": 6668900,
+      "rights": "Actual 12-second Blender render, silent. Source motion and model not included. Motion/other credits and permission context in docs/credits.md; excluded from MIT."
+    },
+    "docs/media/cover.jpg": {
+      "sha256": "186a9fab7a8f637438bca2adac9dcab53e201a8a6124d4aa6d643940f4ae6b5e",
+      "bytes": 78631,
+      "rights": "Still from the same authorized before/after showcase, excluded from MIT."
+    },
+    "docs/media/render-debug.jpg": {
+      "sha256": "812d4a8bba1903c586add5c9483889fafab41e1f72b14b7721c6e3bd8bb4d695",
+      "bytes": 127868,
+      "rights": "Two original/fresh-render comparisons documenting renderer artifacts. Same credited motion and character; excluded from MIT."
+    }
+  }
+}

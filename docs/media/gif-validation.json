@@ -1,0 +1,20 @@
+{
+  "hero": {
+    "frames": 180,
+    "duration_ms": 12000,
+    "size": [
+      1040,
+      734
+    ],
+    "bytes": 6146018
+  },
+  "result": {
+    "frames": 180,
+    "duration_ms": 12000,
+    "size": [
+      512,
+      512
+    ],
+    "bytes": 6668900
+  }
+}
