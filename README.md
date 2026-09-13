@@ -129,6 +129,9 @@ See [CONTRIBUTING](CONTRIBUTING.md).
 The [technical roadmap / 可复用技术路线](docs/technical-roadmap.md) specifies the next
 cloth, lighting and scene stages, their technology choices, reusable contracts and
 acceptance gates. These are planned capabilities, not additions to the current demo.
+The [part-pipeline investigation](docs/part-pipeline.md) compares existing-mesh separation,
+segmented assets and regional generation, with an inspected face-alignment failure.
+Earlier publication ideas are [archived and paused](docs/research-discussion.md).
 
 **Code:** MIT. **Showcase media and third-party assets:** excluded from that license.
 No source motion, model, baked animation, audio, or `.blend` file is distributed.
@@ -159,6 +162,8 @@ MMD 导入桥接、逐帧独立渲染、黑帧检查、GIF 制作，以及这次
 
 下一阶段的技术栈、布料代理、原图场景与灯光、缓存恢复和跨角色验收见
 [可复用技术路线](docs/technical-roadmap.md)。文档明确区分已有能力和待实现模块。
+角色分件、局部生成与脸部错位的选型依据见 [分件路线调查](docs/part-pipeline.md)；
+论文相关讨论已 [记录并暂停](docs/research-discussion.md)。
 
 先用 `prepare` 从原图生成 T pose；检查脸、手、鞋和左右服装细节后，再用 `generate`
 从 T pose 生成 3D 模型。两步都默认只预览计划，加 `--execute` 才调用付费任务。

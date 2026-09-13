@@ -75,6 +75,8 @@ Look at the actual source mesh, not just the auto-rig. Vertex duplication at UV 
 can inflate connected-component counts; counts alone do not establish whether a hand
 is fused. Check side identity anatomically, not from the viewer's left/right.
 Use multiple close-up views for fingers, cuff jewelry, knee pivots, heels and soles.
+For segmented assets or a face with doubled features, use the diagnostic and migration
+criteria in [the part-pipeline investigation](part-pipeline.md) before replacing geometry.
 
 ## 3. Preserve and calibrate
 

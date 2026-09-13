@@ -13,13 +13,16 @@ reconstruction or a generic job runner already exist. See [current evidence](rep
 
 优先级：建立可比较的灯光基准 → 布料材质 → 裙摆物理 → 场景大结构 → 装饰细节。
 完整场景依赖角色与物理稳定，但相机、地面、主光应提前确定。
+在迁移角色和计算布料前，先通过 [分件路线与脸部对齐检查](part-pipeline.md)：
+以完整角色约束比例，分件共享骨架，局部生成作为可选增强，保留已有舞蹈基准。
 
 ```mermaid
 flowchart TD
     A[Original photo / 原图] --> B[Character evidence / 人物与服装分析]
     B --> C[Nano Banana Pro through Tripo / T pose]
     C --> D[Tripo source GLB + auto-rig]
-    D --> E[Preserved surface + calibrated rig]
+    D --> P[Semantic parts + optional local refinement]
+    P --> E[Preserved surface + calibrated rig]
     E --> F[Garment proxy + materials]
     M[Licensed motion / 已获许可动作] --> G[Retargeted body animation]
     E --> G
@@ -178,6 +181,7 @@ Blender 的 [cloth cache 文档](https://docs.blender.org/manual/en/latest/physi
 | 顺序 | 可交付成果 | 通过条件 |
 |---|---|---|
 | M0. 可比基准 | 原版本归档、相机/灯光配置、固定姿态对比页、运行清单 | 同一角色/动作/相机/颜色管理下可复现基准；清楚区分原始与推断信息 |
+| M0a. 分件与脸部 | 候选模型分组、五官对齐诊断、与旧表面/骨架的对应 | 分件适合实际服装结构；脸部几何与外观一致；迁移无无关细节损失 |
 | M1. 布料外观 | 分区标签、材质预设、局部内衬和近景对比 | 衣服印花/鞋/脸无无关改动；中性灯光与目标灯光下均无明显新缺陷 |
 | M2. 裙摆物理 | 单一裙摆代理、碰撞器、连续缓存、同一段 12 秒对比 | 新进程读缓存一致；无模拟爆炸；裙型保持；大抬腿/转身穿插较基准减少 |
 | M3. 场景还原 | 原图相机、房间大结构、灯光与角色合成 | 原图线段/遮挡匹配合理；脚底接触可信；人物不重复；舞蹈不撞进布景 |
@@ -201,6 +205,9 @@ Keep the required stack **Python + Tripo API + Blender**. Branch from the origin
 photo: the character branch prepares a reviewed T pose, while camera/room/light
 analysis keeps the original image. Optional segmentation and relative-depth models
 provide proposals; they do not recover garment patterns, metric rooms or hidden anatomy.
+Use the [part-pipeline decision](part-pipeline.md) before changing the source character:
+retain a whole-character anchor and one rig, inspect face alignment, and treat independent
+regional generation as an optional refinement rather than the default assembly strategy.
 
 Preserve the detailed garment and its UVs. Build a separate cloth proxy, rig its
 attachment region, add animated collision geometry and drive the original surface
